@@ -83,7 +83,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			
-			loginUserExisting:async(formLogin)=>{
+			loginUserExisting:async({ email, password })=>{
 				const url="https://stunning-space-fishstick-wrg456gjpwwc5g57-3001.app.github.dev/"
 				const loginRequirement="/api/login"
 				try{
