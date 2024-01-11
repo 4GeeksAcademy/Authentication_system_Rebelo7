@@ -15,5 +15,11 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
+            "is_active": self.is_active,
             # do not serialize the password, its a security breach
         }
+    
+class TokenBlockedList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(1000), unique=True, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)

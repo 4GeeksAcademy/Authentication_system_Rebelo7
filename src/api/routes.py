@@ -2,12 +2,13 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, TokenBlockedList
 from api.utils import generate_sitemap, APIException, get_hash
 from flask_cors import CORS
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
+from datetime import datetime, timezone
  
 api = Blueprint('api', __name__)
 
@@ -40,15 +41,6 @@ def create_user():
     db.session.commit()
     return jsonify({"msg": "User created"}), 201
 
-@api.route("/login", methods=["POST"])
-def login():
-    username = request.json.get("username", None)
-    password = request.json.get("password", None)
-    if username != "test" or password != "test":
-        return jsonify({"msg": "Bad username or password"}), 401
-
-    access_token = create_access_token(identity=username)
-    return jsonify(access_token=access_token)
 
 @api.route('/login', methods=['POST'])
 def login_user():
@@ -60,14 +52,14 @@ def login_user():
     if user is None:
         return jsonify({"msg": "User not found"}), 401
 
-    if not get_hash(user.password, password):
+    if not get_hash(password):
         return jsonify({"msg": "Wrong password"}), 401
 
     token = create_access_token(
         identity=user.id, additional_claims={"role": "admin"})
     return jsonify({"msg": "Login succesful", "token": token}), 200
 
-@api.route("/protected", methods=["GET"])
+@api.route("/private", methods=["GET"])
 @jwt_required()
 def protected():
     # Access the identity of the current user with get_jwt_identity
@@ -78,3 +70,13 @@ def protected():
 def handle_get_hash():
     to_hash = request.json.get("string")
     return get_hash(to_hash)
+
+@api.route('/logout', methods=['POST'])
+@jwt_required()
+def user_logout():
+    jti = get_jwt()["jti"]
+    now = datetime.now(timezone.utc)
+    tokenBlocked = TokenBlockedList(token=jti, created_at=now)
+    db.session.add(tokenBlocked)
+    db.session.commit()
+    return jsonify({"msg": "User logged out"}), 200
