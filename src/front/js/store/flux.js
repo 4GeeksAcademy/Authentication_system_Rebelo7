@@ -99,11 +99,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 							}
 						}
 						)
-
+						
+						if(response.status !== 200) return false;
+						
 						const jsonResponse= await response.json()
 	
 						if (jsonResponse["token"]){
-							localStorage.setItem("usertoken", jsonResponse["token"])
+							localStorage.setItem("userToken", jsonResponse["token"])
 							return true;
 	
 						}
@@ -118,37 +120,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 	
 			},
 	
-			getInformationOfToken: async()=>{
-				const url="https://stunning-space-fishstick-wrg456gjpwwc5g57-3001.app.github.dev/"
-				const tokenRequirement="/api/private"
-				const storageToken=sessionStorage.getItem("userToken")
-				try{
-					const response= await fetch(url+tokenRequirement,{
-						method:"GET",
-						headers:{
-							"Authorization":`Bearer ${storageToken}`,
-							'Content-type': 'application/json'
+			getInformationOfToken: async () => {
+				const url = "https://stunning-space-fishstick-wrg456gjpwwc5g57-3001.app.github.dev/";
+				const tokenRequirement = "/api/private";
+			 
+				try {
+					const response = await fetch(url + tokenRequirement, {
+						method: 'GET',
+						headers: {
+							'Authorization': `Bearer ${localStorage.getItem("userToken")}`
 						}
-					})
-	
-					if (response.ok){
-						const jsonResponse= await response.json()
-						console.log(jsonResponse)
-						const store=getStore()
-						setStore({...store,informationUserLogin:jsonResponse})
+					});
+			 
+					if (response.status !== 200) {
+						throw new Error(`Error: ${response.status}`);
 					}
-					else{
-						const jsonResponse=response.json()
-						console.log(jsonResponse)
-						const store=getStore()
-						store({...store,informationUserLogin:jsonResponse})
-					}
-	
+			 
+					const jsonResponse = await response.json();
+			 
+					return jsonResponse;
+				} catch (error) {
+					console.error("An error occurred: ", error);
 				}
-				catch(e){
-					console.error("Error fetching data",e)
-				}
-			}
+			 }
 		}
 	};
 };

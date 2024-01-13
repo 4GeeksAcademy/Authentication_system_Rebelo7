@@ -4,18 +4,32 @@ import { useContext } from 'react'
 import { Context } from '../store/appContext'
 import { useNavigate,Link } from 'react-router-dom'
 
+
 export const Login = () => {
     
     const {store,actions}=useContext(Context);
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
   
-    const loginUser = () => {
-        actions.loginUserExisting({
+    const loginUser =  async () => {
+        const loginSuccessful = await actions.loginUserExisting({
             email,
             password
         })
+
+        if(loginSuccessful){
+            navigate("/private");
+            return;
+        }
+
+        setEmail("")
+        setPassword("")
+        setError("User or password incorrect");
+
+
     }
   
     return (
@@ -30,6 +44,7 @@ export const Login = () => {
   
               <button className="button-signup" type="button" onClick={loginUser}>Login</button>
           </form>
+          {error && <p>{error}</p>}
 
           <div className='goHome-login'>
             <Link to="/">Go to Home</Link>
