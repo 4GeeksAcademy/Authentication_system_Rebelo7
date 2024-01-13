@@ -36,6 +36,7 @@ export const Login = () => {
       <div className='container-form'>
           <form 
           id='contact-form' className='form-signup'>
+              <h6>Login</h6>
               <label className='label-signup' for="email">Email:</label>
               <input className='input-signup' type="email" id="email" name="email" onChange={(e)=> setEmail(e.target.value)} required/>
     

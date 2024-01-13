@@ -24,7 +24,8 @@ export const Private = () => {
   return (
     <>
   
-    {userToken && <p>User loged in!</p>};
+    {userToken && <p>User loged in!</p>}
+    
  
     </>
     

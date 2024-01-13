@@ -11,7 +11,7 @@ export const Signup = () => {
   
   const [signup, setSignup]=useState(store.formSignup)
 
-  const goToHome=useNavigate()
+  const goToLogin=useNavigate()
   const formRef= useRef (null)
 
   const handleInputForm = (value,name)=>{
@@ -24,10 +24,10 @@ export const Signup = () => {
     try{
       console.log(formSignup)
       await actions.signupNewUser(formSignup)
-      alert(`The user with the name  ${store.messageToShowAlert.user_created} was created succesfully`)
+      alert(`The user  was created succesfully`)
       formRef.current.reset()
       setSignup(store.formSignup)
-      goToHome("/")
+      goToLogin("/login")
     }
     catch(e){
       console.log("An error was occurred, check it out", e)
@@ -39,6 +39,7 @@ export const Signup = () => {
         <form 
         ref={formRef}
         id='contact-form' className='form-signup'>
+            <h6>Signup</h6>
             <label className='label-signup' for="email">Email:</label>
             <input className='input-signup' type="email" id="email" name="email" onChange={(e)=>(handleInputForm(e.target.value, e.target.name))} required/>
 
@@ -47,7 +48,9 @@ export const Signup = () => {
 
             <button className="button-signup" type="button" onClick={()=>handleSubmit(signup)}>Sign Up</button>
         </form>
-        <div className='container-go-home'><Link to="/">Go to Home</Link></div>
+        <div className='goHome-login'>
+            <Link to="/">Go to Home</Link>
+            </div>
     </div>
   )
 }
