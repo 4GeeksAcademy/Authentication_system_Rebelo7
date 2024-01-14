@@ -21,11 +21,16 @@ export const Private = () => {
       
   })
 
+  const logout = async () => {
+    localStorage.removeItem("userToken");
+    window.location.reload(true);
+  };
+
   return (
     <>
   
     {userToken && <p>User loged in!</p>}
-    
+    <button onClick={logout}>Logout</button>
  
     </>
     

@@ -71,12 +71,3 @@ def handle_get_hash():
     to_hash = request.json.get("string")
     return get_hash(to_hash)
 
-@api.route('/logout', methods=['POST'])
-@jwt_required()
-def user_logout():
-    jti = get_jwt()["jti"]
-    now = datetime.now(timezone.utc)
-    tokenBlocked = TokenBlockedList(token=jti, created_at=now)
-    db.session.add(tokenBlocked)
-    db.session.commit()
-    return jsonify({"msg": "User logged out"}), 200
