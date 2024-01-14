@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useContext } from 'react'
-import { Context } from '../store/appContext'
 import { useNavigate } from 'react-router-dom'
 import "../../styles/private.css"
 
@@ -28,10 +26,10 @@ export const Private = () => {
 
   return (
     <>
-  
-    {userToken && <p>User loged in!</p>}
-    <button onClick={logout}>Logout</button>
- 
+    <div className="text-center mt-5">
+      {userToken && <p>User loged in!</p>}
+      <button onClick={logout}>Logout</button>
+    </div>
     </>
     
   )

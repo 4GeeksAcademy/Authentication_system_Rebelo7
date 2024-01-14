@@ -38,7 +38,8 @@ export const Signup = () => {
     <div className='container-form'>
         <form 
         ref={formRef}
-        id='contact-form' className='form-signup'>
+        id='contact-form' className='form-signup'
+        onSubmit={(e) => { e.preventDefault(); handleSubmit(signup); }}>
             <h6>Signup</h6>
             <label className='label-signup' for="email">Email:</label>
             <input className='input-signup' type="email" id="email" name="email" onChange={(e)=>(handleInputForm(e.target.value, e.target.name))} required/>

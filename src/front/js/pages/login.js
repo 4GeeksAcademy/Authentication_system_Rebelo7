@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, {useState } from 'react'
 import '../../styles/login.css'
 import { useContext } from 'react'
 import { Context } from '../store/appContext'
@@ -38,10 +38,10 @@ export const Login = () => {
           id='contact-form' className='form-signup'>
               <h6>Login</h6>
               <label className='label-signup' for="email">Email:</label>
-              <input className='input-signup' type="email" id="email" name="email" onChange={(e)=> setEmail(e.target.value)} required/>
+              <input className='input-signup' type="email" id="email" name="email" value={email} onChange={(e)=> setEmail(e.target.value)} required/>
     
               <label className='label-signup' for="password">Password:</label>
-              <input className='input-signup' type="password" id="password" name="password"  onChange={(e)=> setPassword(e.target.value)} required/>
+              <input className='input-signup' type="password" id="password" name="password" value={password} onChange={(e)=> setPassword(e.target.value)} required/>
   
               <button className="button-signup" type="button" onClick={loginUser}>Login</button>
           </form>

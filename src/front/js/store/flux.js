@@ -52,7 +52,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const url="https://stunning-space-fishstick-wrg456gjpwwc5g57-3001.app.github.dev/"
 				const signupRequirement="/api/signup"
 				try{
-					// console.log(url+signupRequirement)
+					
 					const response= await fetch(url+signupRequirement,{
 						method:"POST",
 						body: JSON.stringify(formSignup),
@@ -87,37 +87,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const url="https://stunning-space-fishstick-wrg456gjpwwc5g57-3001.app.github.dev/"
 				const loginRequirement="/api/login"
 				try{
-					const response = await fetch(url+loginRequirement, 
-						{
-							method:'POST',
-							body:JSON.stringify({
-								email,
-								password
-							}),
-							headers:{
-								'Content-type': 'application/json'
-							}
-						}
-						)
+					const response = await fetch(url+loginRequirement, {
+						method:'POST',
+						headers:{
+							'Content-type': 'application/json'
+						},
+						body:JSON.stringify({
+							email,
+							password
+						})
+					});
+					
+					if(response.status !==200) return false	
 						
-						if(response.status !== 200) return false;
-						
-						const jsonResponse= await response.json()
+					const jsonResponse= await response.json()
 	
-						if (jsonResponse["token"]){
-							localStorage.setItem("userToken", jsonResponse["token"])
-							return true;
+					if (jsonResponse["token"]){
+						localStorage.setItem("userToken", jsonResponse["token"])
+						return true;
 	
-						}
-						return false;
+					}
+					return false;
 						
 				}
 			
 				catch(e){
 							console.log("An error was occurred, check it out!",e)
 				}
-	
-	
 			},
 	
 			getInformationOfToken: async () => {
@@ -139,6 +135,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const jsonResponse = await response.json();
 			 
 					return jsonResponse;
+
 				} catch (error) {
 					console.error("An error occurred: ", error);
 				}

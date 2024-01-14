@@ -2,13 +2,13 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, TokenBlockedList
-from api.utils import generate_sitemap, APIException, get_hash
+from api.models import db, User
+from api.utils import  get_hash
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
-from datetime import datetime, timezone
+from werkzeug.security import check_password_hash
  
 api = Blueprint('api', __name__)
 
@@ -45,19 +45,16 @@ def create_user():
 @api.route('/login', methods=['POST'])
 def login_user():
   
-    email = request.json.get("email")
-    password = request.json.get("password")
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
     
-    user = User.query.filter_by(email=email).first()
-    if user is None:
-        return jsonify({"msg": "User not found"}), 401
+    found_user = User.query.filter_by(email=email, password=get_hash(password)).one_or_none()
 
-    if not get_hash(password):
-        return jsonify({"msg": "Wrong password"}), 401
-
-    token = create_access_token(
-        identity=user.id, additional_claims={"role": "admin"})
-    return jsonify({"msg": "Login succesful", "token": token}), 200
+    if found_user is None:
+        return "email or password incorrect", 400
+    
+    token = create_access_token(identity=email)
+    return jsonify(token=token)
 
 @api.route("/private", methods=["GET"])
 @jwt_required()
